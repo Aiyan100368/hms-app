@@ -25,7 +25,12 @@ public class SecurityConfig {
         http.csrf().disable().cors().disable();
         http.addFilterBefore(jwtFilter, AuthorizationFilter.class);
 //haap
-        http.authorizeHttpRequests().anyRequest().permitAll();
+        // http.authorizeHttpRequests().anyRequest().permitAll();
+
+        http.authorizeHttpRequests().
+                requestMatchers("/api/v1/users/login","/api/v1/users/signup")
+                .permitAll()
+                .anyRequest().authenticated();
         return http.build();
     }
 }

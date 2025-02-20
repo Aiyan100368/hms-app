@@ -7,6 +7,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -43,7 +46,13 @@ if(token!=null && token.startsWith("Bearer ")) {
     Optional<AppUser> opUsername = userRepository.findByUsername(username);
     if (opUsername.isPresent()) {
 
-        //Latter
+        AppUser appUser = opUsername.get();
+        UsernamePasswordAuthenticationToken
+                authenticationToken=
+                new UsernamePasswordAuthenticationToken(appUser,null,null);
+
+        authenticationToken.setDetails(new WebAuthenticationDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }
 filterChain.doFilter(request,response);
