@@ -25,8 +25,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping  ("/signup")
-    public ResponseEntity<?> createUser(
+    @PostMapping  ("/signup-property-owner")
+    public ResponseEntity<?> createPropertyOwnerUser(
             @RequestBody AppUser user
     ) {
         Optional<AppUser> opUsername = appUserRepository.findByUsername(user.getUsername());
@@ -44,6 +44,7 @@ public class UserController {
         }
         String encryptedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(5));
         user.setPassword(encryptedPassword);
+        user.setRole("ROLE_OWNER");
         AppUser savedUser = appUserRepository.save(user);
         return new ResponseEntity<>(savedUser,HttpStatus.CREATED);
     }
@@ -67,6 +68,12 @@ public class UserController {
             return new ResponseEntity<>("Invalid username/password",HttpStatus.FORBIDDEN);
         }
 
+
+
+
+
     }
 
-}
+    }
+
+
